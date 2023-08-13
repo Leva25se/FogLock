@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "foglock",
+  "version": "${version}",
+  "name": "FogLock",
+  "description": "Changing the fog visibility distance regardless of the player's vie distance",
+  "authors": [
+    "leva25se"
+  ],
+  "contact": {
+    "repo": "https://github.com/leva25se/FogLock"
+  },
+  "license": "MIT",
+  "icon": "assets/foglock/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.leva25se.foglock.client.FogLockClient"
+    ],
+    "main": [
+      "io.github.leva25se.foglock.FogLock"
+    ]
+  },
+  "mixins": [
+    "foglock.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": ">=${minecraft_version}"
+  }
+}
