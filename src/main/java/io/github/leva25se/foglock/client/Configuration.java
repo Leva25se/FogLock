@@ -1,18 +1,16 @@
 package io.github.leva25se.foglock.client;
 
+import com.google.gson.JsonObject;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Configuration {
-    static ArrayList<FogType> fogEnable = new ArrayList<>();
-    static HashMap<FogType, Float> fogStart = new HashMap<>();
-    static HashMap<FogType, Float> fogEnd = new HashMap<>();
+    static HashMap<FogType, Float[]> fog = new HashMap<>();
 
     public static FogType toType(Camera ca, CameraSubmersionType ct){
         switch (ct){
@@ -37,28 +35,19 @@ public class Configuration {
         return null;
     }
 
-    public static FogType isEnable(Camera ca, CameraSubmersionType ct){
+    public static Float[] get(Camera ca, CameraSubmersionType ct){
         FogType fogType = toType(ca, ct);
-        if (fogType != null){
-            if (fogEnable.contains(fogType)){
-                return fogType;
-            }
-        }
-        return null;
+        return fog.get(fogType);
     }
-    public static float getStart(FogType fogType) {
-        return fogStart.get(fogType);
-    }
-    public static float getEnd(FogType fogType) {
-        return fogEnd.get(fogType);
-    }
-    public static void add(FogType fogType, Float start, Float end){
-        fogEnable.add(fogType);
-        fogStart.put(fogType, start);
-        fogEnd.put(fogType, end);
 
-        System.out.println(fogEnable);
-        System.out.println(fogStart);
-        System.out.println(fogEnd);
+    private static float get(JsonObject jsonObject, String str){
+        return jsonObject.get(str).getAsFloat();
     }
+    public static void add(FogType fogType, JsonObject jo){
+        Float[] floats = new Float[]{get(jo, "start"),get(jo, "end")};
+        fog.put(fogType, floats);
+        System.out.println(fog);
+    }
+
+
 }

@@ -26,36 +26,12 @@ public class FogLockClient implements ClientModInitializer {
             new ConfigLoader().load(file);
         }
         try {
-            Gson gson = new Gson();
-            var json = gson.fromJson(new FileReader(file), JsonObject.class);
-            {
-                if (json.has("LAVA")){
-                    JsonObject jsonObject = json.getAsJsonObject("LAVA");
-                    Configuration.add(FogType.LAVA, jsonObject.get("start").getAsFloat(), jsonObject.get("end").getAsFloat());
-                }
-            }
-            {
-                if (json.has("LAVA_FIRE_RESISTANCE")){
-                    JsonObject jsonObject = json.getAsJsonObject("LAVA_FIRE_RESISTANCE");
-                    Configuration.add(FogType.LAVA_FIRE_RESISTANCE, jsonObject.get("start").getAsFloat(), jsonObject.get("end").getAsFloat());
-                }
-            }
-            {
-                if (json.has("NONE")){
-                    JsonObject jsonObject = json.getAsJsonObject("NONE");
-                    Configuration.add(FogType.NONE, jsonObject.get("start").getAsFloat(), jsonObject.get("end").getAsFloat());
-                }
-            }
-            {
-                if (json.has("POWDER_SNOW")){
-                    JsonObject jsonObject = json.getAsJsonObject("POWDER_SNOW");
-                    Configuration.add(FogType.POWDER_SNOW, jsonObject.get("start").getAsFloat(), jsonObject.get("end").getAsFloat());
-                }
-            }
-            {
-                if (json.has("WATER")){
-                    JsonObject jsonObject = json.getAsJsonObject("WATER");
-                    Configuration.add(FogType.WATER, jsonObject.get("start").getAsFloat(), jsonObject.get("end").getAsFloat());
+            var json =  new Gson().fromJson(new FileReader(file), JsonObject.class);
+
+            for (FogType fogType : FogType.values()) {
+                if (json.has(fogType.name())) {
+                    JsonObject jsonObject = json.getAsJsonObject(fogType.name());
+                    Configuration.add(fogType, jsonObject);
                 }
             }
 
