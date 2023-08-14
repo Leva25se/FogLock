@@ -19,7 +19,7 @@ public class ConfigLoader {
             json.put("NONE", map);
         }
         try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(json, writer);
         } catch (IOException e) {
             throw new RuntimeException(e);
