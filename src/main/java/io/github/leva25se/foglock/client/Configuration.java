@@ -46,7 +46,6 @@ public class Configuration {
     public static void add(FogType fogType, JsonObject jo){
         Float[] floats = new Float[]{get(jo, "start"),get(jo, "end")};
         fog.put(fogType, floats);
-        System.out.println(fog);
     }
 
 
