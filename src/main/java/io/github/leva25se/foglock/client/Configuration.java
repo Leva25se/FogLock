@@ -7,10 +7,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Configuration {
-    static HashMap<FogType, Float[]> fog = new HashMap<>();
+    static HashMap<FogType, ArrayList<Float>> fog = new HashMap<>();
 
     public static FogType toType(Camera ca, CameraSubmersionType ct){
         switch (ct){
@@ -35,7 +36,7 @@ public class Configuration {
         return null;
     }
 
-    public static Float[] get(Camera ca, CameraSubmersionType ct){
+    public static ArrayList<Float> get(Camera ca, CameraSubmersionType ct){
         FogType fogType = toType(ca, ct);
         return fog.get(fogType);
     }
@@ -44,7 +45,17 @@ public class Configuration {
         return jsonObject.get(str).getAsFloat();
     }
     public static void add(FogType fogType, JsonObject jo){
-        Float[] floats = new Float[]{get(jo, "start"),get(jo, "end")};
+        ArrayList<Float> floats = new ArrayList<>();
+        floats.add(get(jo, "start"));
+        floats.add(get(jo, "end"));
+        if (jo.has("alpha")){
+            floats.add(get(jo, "alpha"));
+        }
+        if (jo.has("r") && jo.has("g") && jo.has("b")){
+            floats.add(get(jo, "r"));
+            floats.add(get(jo, "g"));
+            floats.add(get(jo, "b"));
+        }
         fog.put(fogType, floats);
     }
 
