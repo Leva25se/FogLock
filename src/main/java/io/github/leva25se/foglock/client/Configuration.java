@@ -7,11 +7,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Configuration {
-    static HashMap<FogType, ArrayList<Float>> fog = new HashMap<>();
+    static HashMap<FogType, HashMap<FloatType, Float> > fog = new HashMap<>();
 
     public static FogType toType(Camera ca, CameraSubmersionType ct){
         switch (ct){
@@ -36,27 +35,28 @@ public class Configuration {
         return null;
     }
 
-    public static ArrayList<Float> get(Camera ca, CameraSubmersionType ct){
+    public static HashMap<FloatType, Float> get(Camera ca, CameraSubmersionType ct){
         FogType fogType = toType(ca, ct);
-        return fog.get(fogType);
+        return fog.getOrDefault(fogType, null);
     }
 
     private static float get(JsonObject jsonObject, String str){
         return jsonObject.get(str).getAsFloat();
     }
     public static void add(FogType fogType, JsonObject jo){
-        ArrayList<Float> floats = new ArrayList<>();
-        floats.add(get(jo, "start"));
-        floats.add(get(jo, "end"));
+        HashMap<FloatType, Float> floatHashMap = new HashMap<>();
+        floatHashMap.put(FloatType.START, get(jo, "start"));
+        floatHashMap.put(FloatType.END, get(jo, "end"));
+
         if (jo.has("alpha")){
-            floats.add(get(jo, "alpha"));
+            floatHashMap.put(FloatType.ALPHA, get(jo, "alpha"));
         }
         if (jo.has("r") && jo.has("g") && jo.has("b")){
-            floats.add(get(jo, "r"));
-            floats.add(get(jo, "g"));
-            floats.add(get(jo, "b"));
+            floatHashMap.put(FloatType.R, get(jo, "r"));
+            floatHashMap.put(FloatType.G, get(jo, "g"));
+            floatHashMap.put(FloatType.B, get(jo, "b"));
         }
-        fog.put(fogType, floats);
+        fog.put(fogType, floatHashMap);
     }
 
 
