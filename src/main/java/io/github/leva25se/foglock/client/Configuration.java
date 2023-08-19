@@ -45,9 +45,12 @@ public class Configuration {
     }
     public static void add(FogType fogType, JsonObject jo){
         HashMap<FloatType, Float> floatHashMap = new HashMap<>();
-        floatHashMap.put(FloatType.START, get(jo, "start"));
-        floatHashMap.put(FloatType.END, get(jo, "end"));
-
+        if (jo.has("start")) {
+            floatHashMap.put(FloatType.START, get(jo, "start"));
+        }
+        if (jo.has("end")) {
+            floatHashMap.put(FloatType.END, get(jo, "end"));
+        }
         if (jo.has("alpha")){
             floatHashMap.put(FloatType.ALPHA, get(jo, "alpha"));
         }
