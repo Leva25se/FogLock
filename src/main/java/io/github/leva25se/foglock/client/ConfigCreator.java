@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 
-public class ConfigLoader {
+public class ConfigCreator {
     public void load(File file) {
         HashMap<String, HashMap<String, Integer>> json = new HashMap<>();
         {
