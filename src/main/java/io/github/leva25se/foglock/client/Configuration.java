@@ -1,6 +1,9 @@
 package io.github.leva25se.foglock.client;
 
 import com.google.gson.JsonObject;
+import io.github.leva25se.foglock.client.setting.FloatFog;
+import io.github.leva25se.foglock.client.setting.FogSetting;
+import io.github.leva25se.foglock.client.setting.StringFog;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.entity.Entity;
@@ -10,9 +13,10 @@ import net.minecraft.entity.effect.StatusEffects;
 import java.util.HashMap;
 
 public class Configuration {
-    static HashMap<FogType, HashMap<FloatType, Float> > fog = new HashMap<>();
 
-    public static FogType toType(Camera ca, CameraSubmersionType ct){
+    private final HashMap<FogType, HashMap<FloatType, FogSetting>> fog = new HashMap<>();
+
+    public FogType toType(Camera ca, CameraSubmersionType ct){
         switch (ct){
             case LAVA -> {
                 Entity entity = ca.getFocusedEntity();
@@ -31,36 +35,41 @@ public class Configuration {
             case NONE -> {
                 return FogType.NONE;
             }
+            default -> {
+                return FogType.UNDEFINED;
+            }
+        }
+    }
+
+    public HashMap<FloatType, FogSetting> get(FogType type) {
+        if (type != null){
+            if (fog.containsKey(type)) {
+                return fog.get(type);
+            }
         }
         return null;
     }
 
-    public static HashMap<FloatType, Float> get(Camera ca, CameraSubmersionType ct){
-        FogType fogType = toType(ca, ct);
-        return fog.getOrDefault(fogType, null);
+    private String getS(JsonObject jsonObject, String str) {
+        return jsonObject.get(str).getAsString();
     }
 
-    private static float get(JsonObject jsonObject, String str){
+    private float getF(JsonObject jsonObject, String str) {
         return jsonObject.get(str).getAsFloat();
     }
-    public static void add(FogType fogType, JsonObject jo){
-        HashMap<FloatType, Float> floatHashMap = new HashMap<>();
-        if (jo.has("start")) {
-            floatHashMap.put(FloatType.START, get(jo, "start"));
-        }
-        if (jo.has("end")) {
-            floatHashMap.put(FloatType.END, get(jo, "end"));
-        }
-        if (jo.has("alpha")){
-            floatHashMap.put(FloatType.ALPHA, get(jo, "alpha"));
-        }
-        if (jo.has("r") && jo.has("g") && jo.has("b")){
-            floatHashMap.put(FloatType.R, get(jo, "r"));
-            floatHashMap.put(FloatType.G, get(jo, "g"));
-            floatHashMap.put(FloatType.B, get(jo, "b"));
+
+    public void add(FogType fogType, JsonObject jo) {
+        HashMap < FloatType, FogSetting > floatHashMap = new HashMap <> ();
+        for (FloatType floatType: FloatType.values()) {
+            String str = floatType.name().toLowerCase();
+            if (jo.has(str)) {
+                if (jo.getAsJsonPrimitive(str).isNumber()) {
+                    floatHashMap.put(floatType, new FloatFog(getF(jo, str)));
+                } else {
+                    floatHashMap.put(floatType, new StringFog(getS(jo, str)));
+                }
+            }
         }
         fog.put(fogType, floatHashMap);
     }
-
-
 }

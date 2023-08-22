@@ -11,11 +11,12 @@ import java.util.HashMap;
 
 public class ConfigCreator {
     public void load(File file) {
-        HashMap<String, HashMap<String, Integer>> json = new HashMap<>();
+        HashMap<String, HashMap<String, Object>> json = new HashMap<>();
         {
-            HashMap<String, Integer> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("end", 128);
-            map.put("start", 32);
+            map.put("start", "32");
+            map.put("r", "32");
             json.put("NONE", map);
         }
         try (Writer writer = new FileWriter(file)) {

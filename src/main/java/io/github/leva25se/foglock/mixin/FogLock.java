@@ -4,6 +4,9 @@ package io.github.leva25se.foglock.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.leva25se.foglock.client.Configuration;
 import io.github.leva25se.foglock.client.FloatType;
+import io.github.leva25se.foglock.client.FogLockClient;
+import io.github.leva25se.foglock.client.FogType;
+import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
@@ -14,28 +17,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 
-@Mixin(BackgroundRenderer.class)
+@Mixin(value = BackgroundRenderer.class, priority = 1002)
 public class FogLock {
+
     @Inject(at = @At("TAIL"), method = "applyFog")
     private static void setFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
         CameraSubmersionType cameraSubmersionType = camera.getSubmersionType();
-        HashMap<FloatType, Float> fogType1 = Configuration.get(camera, cameraSubmersionType);
-        if (fogType1 != null) {
-            if (fogType1.containsKey(FloatType.START)){
-                RenderSystem.setShaderFogStart(fogType1.get(FloatType.START));
+        Configuration configuration = FogLockClient.getConfiguration();
+        FogType fogType1 = configuration.toType(camera, cameraSubmersionType);
+        HashMap<FloatType, FogSetting> fogSetting = configuration.get(fogType1);
+        float[] color =  RenderSystem.getShaderFogColor();
+        if (fogSetting != null) {
+            if (fogSetting.containsKey(FloatType.START)){
+                RenderSystem.setShaderFogStart(fogSetting.get(FloatType.START).get(camera, viewDistance, thickFog));
             }
-            if (fogType1.containsKey(FloatType.END)){
-                RenderSystem.setShaderFogEnd(fogType1.get(FloatType.END));
+            if (fogSetting.containsKey(FloatType.END)){
+                RenderSystem.setShaderFogEnd(fogSetting.get(FloatType.END).get(camera, viewDistance, thickFog));
             }
-            if (fogType1.containsKey(FloatType.ALPHA)){
-                RenderSystem.getShaderFogColor()[3] = fogType1.get(FloatType.ALPHA);
+            if (fogSetting.containsKey(FloatType.R)){
+               color[0] = fogSetting.get(FloatType.R).get(camera, viewDistance, thickFog);
             }
-            if (fogType1.containsKey(FloatType.R)){
-                RenderSystem.getShaderFogColor()[0] = fogType1.get(FloatType.R);
-                RenderSystem.getShaderFogColor()[1] = fogType1.get(FloatType.G);
-                RenderSystem.getShaderFogColor()[2] = fogType1.get(FloatType.B);
+            if (fogSetting.containsKey(FloatType.G)){
+               color[1] = fogSetting.get(FloatType.G).get(camera, viewDistance, thickFog);
+            }
+            if (fogSetting.containsKey(FloatType.B)){
+               color[2] = fogSetting.get(FloatType.B).get(camera, viewDistance, thickFog);
+            }
+            if (fogSetting.containsKey(FloatType.ALPHA)){
+               color[3] = fogSetting.get(FloatType.ALPHA).get(camera, viewDistance, thickFog);
             }
         }
     }
-
 }

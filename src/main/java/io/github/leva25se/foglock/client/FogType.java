@@ -5,5 +5,6 @@ public enum FogType {
     LAVA_FIRE_RESISTANCE,
     NONE,
     POWDER_SNOW,
-    WATER
+    WATER,
+    UNDEFINED
 }
