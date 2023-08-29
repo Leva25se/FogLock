@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.leva25se.foglock.client.setting.FloatFog;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.setting.StringFog;
+import io.github.leva25se.foglock.client.value.StringValue;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.entity.Entity;
@@ -58,7 +59,7 @@ public class Configuration {
         return jsonObject.get(str).getAsFloat();
     }
 
-    public void add(FogType fogType, JsonObject jo) {
+    public void add(FogType fogType, JsonObject jo, StringValue stringValue) {
         HashMap < FloatType, FogSetting > floatHashMap = new HashMap <> ();
         for (FloatType floatType: FloatType.values()) {
             String str = floatType.name().toLowerCase();
@@ -66,7 +67,7 @@ public class Configuration {
                 if (jo.getAsJsonPrimitive(str).isNumber()) {
                     floatHashMap.put(floatType, new FloatFog(getF(jo, str)));
                 } else {
-                    floatHashMap.put(floatType, new StringFog(getS(jo, str)));
+                    floatHashMap.put(floatType, new StringFog(getS(jo, str), stringValue));
                 }
             }
         }
