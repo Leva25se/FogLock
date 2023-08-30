@@ -1,19 +1,18 @@
 package io.github.leva25se.foglock.client.value;
 
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
-import net.minecraft.entity.Entity;
 
 public class SimpleCalculation implements StringValue {
+
+    private final ApplyPlaceholders applyPlaceholders;
+
+    public SimpleCalculation(ApplyPlaceholders applyPlaceholders){
+        this.applyPlaceholders = applyPlaceholders;
+    }
+
     @Override
     public float getValue(String str, Camera camera, float vieDistance, boolean thickFog) {
-        Entity entity = camera.getFocusedEntity();
-        if (entity instanceof ClientPlayerEntity) {
-            str = str.replace("{underwaterVisibility}", String.valueOf(((ClientPlayerEntity)entity).getUnderwaterVisibility()));
-
-        }
-        str = str.replace("{vieDistance}", String.valueOf(vieDistance))
-                .replace("{thickFog}", String.valueOf((thickFog) ? 1 : 0));
+        str = applyPlaceholders.applyPlaceholders(str, camera, vieDistance, thickFog);
         char[] chars = str.toCharArray();
         float result = 0f;
         boolean first = true;
@@ -36,7 +35,7 @@ public class SimpleCalculation implements StringValue {
                     case '-' -> result -= f;
                     case '*' -> result *= f;
                     case '/' -> result /= f;
-                    case 'm' -> result = Math.max(result, f);
+                    case 'x' -> result = Math.max(result, f);
                     case 'n' -> result = Math.min(result, f);
                 }
             }

@@ -10,23 +10,27 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class ConfigCreator {
-    private final  Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final File file;
     public ConfigCreator(File file){
         this.file = file;
     }
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public void load() throws IOException {
         HashMap<String, Object> json = new HashMap<>();
         {
             HashMap<String, Object> map = new HashMap<>();
             map.put("end", 128);
             map.put("start", "32");
-            map.put("b", 1.5f);
+            map.put("b", 0.5f);
             json.put("NONE", map);
         }
-        gson.toJson(json, new FileWriter(file));
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(json, writer);
+        }
     }
     public void write(JsonObject json) throws IOException {
-            gson.toJson(json, new FileWriter(file));
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(json, writer);
+        }
     }
 }
