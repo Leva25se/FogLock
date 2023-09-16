@@ -17,7 +17,7 @@ public class SimpleCalculation implements StringValue {
         float result = 0f;
         boolean first = true;
         StringBuilder stringBuilder1 = new StringBuilder();
-        for (int i  = 0; i < chars.length; i++){
+        for (int i  = 0; i <chars.length; i++){
             char c1 = chars[i];
             if (Character.isDigit(c1) || c1 == '.') {
                 if (first){
@@ -48,7 +48,7 @@ public class SimpleCalculation implements StringValue {
 
     public  float getNext(int i, char[] chars) {
         StringBuilder stringBuilder1 = new StringBuilder();
-        for (; i < chars.length; i += 1) {
+        for (; i <chars.length; i += 1) {
             char c1 = chars[i];
             if (Character.isDigit(c1) || c1 == '.') {
                 stringBuilder1.append(c1);

@@ -90,14 +90,14 @@ MAX_FD=maximum
 
 warn () {
     echo "$*"
-} >&2
+}>&2
 
 die () {
     echo
     echo "$*"
     echo
     exit 1
-} >&2
+}>&2
 
 # OS specific support (must be 'true' or 'false').
 cygwin=false
@@ -130,7 +130,7 @@ location of your Java installation."
     fi
 else
     JAVACMD=java
-    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+    which java>/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
 Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
@@ -211,7 +211,7 @@ set -- \
         "$@"
 
 # Stop when "xargs" is not available.
-if ! command -v xargs >/dev/null 2>&1
+if ! command -v xargs>/dev/null 2>&1
 then
     die "xargs is not available"
 fi
@@ -222,7 +222,7 @@ fi
 #
 # In Bash we could simply go:
 #
-#   readarray ARGS < <( xargs -n1 <<<"$var" ) &&
+#   readarray ARGS <<( xargs -n1 <<<"$var" ) &&
 #   set -- "${ARGS[@]}" "$@"
 #
 # but POSIX shell has neither arrays nor command substitution, so instead we
