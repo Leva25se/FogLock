@@ -23,7 +23,7 @@ public class ConfigurationManager {
             none.put("start", 32);
             none.put("end", 128);
             none.put("b", 2);
-            none.put("aplha", 0.25);
+            none.put("alpha", 0.25);
             json.put("identifiers", generateTagList());
             json.put("NONE", none);
             write(json);
@@ -60,16 +60,15 @@ public class ConfigurationManager {
                     if (json.get("AutoAddNewFeaturesToConfiguration").getAsBoolean()) {
                         json.add("identifiers", JsonParser.parseString(gson.toJson(generateTagList())));
                     }
-                    json.addProperty("version", "1.5");
                     add(json);
                 }
             }
         } else {
-            json.addProperty("version", "1.5");
             json.addProperty("AutoAddNewFeaturesToConfiguration", true);
             json.addProperty("calculation", "none");
             add(json);
         }
+        json.addProperty("version", "1.5");
         write(json);
     }
     private void add(JsonObject json){
