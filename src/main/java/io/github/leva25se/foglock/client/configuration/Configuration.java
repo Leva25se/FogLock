@@ -31,7 +31,7 @@ public class Configuration {
 
     private RegistryEntry<Biome> lastBiome;
 
-    private HashMap <FloatType, FogSetting> fogSettingHashMap;
+    private HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingHashMap;
 
     public RegistryEntry<Biome> getLastBiome() {
         return lastBiome;
@@ -41,11 +41,11 @@ public class Configuration {
         this.lastBiome = lastBiome;
     }
 
-    public void setFogSettingHashMap(HashMap<FloatType, FogSetting> fogSettingHashMap) {
+    public void setFogSettingHashMap(HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingHashMap) {
         this.fogSettingHashMap = fogSettingHashMap;
     }
 
-    public HashMap<FloatType, FogSetting> getFogSettingHashMap() {
+    public HashMap <FogType, HashMap <FloatType, FogSetting>> getFogSettingHashMap() {
         return fogSettingHashMap;
     }
 

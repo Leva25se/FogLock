@@ -33,17 +33,16 @@ public class FogLock {
 
         Configuration configuration = FogLockClient.getConfiguration();
         CameraSubmersionType cameraSubmersionType = camera.getSubmersionType();
-        HashMap <FloatType, FogSetting> fogSetting = null;
         FogType fogType1 = toType(camera, cameraSubmersionType);
+        HashMap <FogType, HashMap <FloatType, FogSetting>> identifiersFog = new HashMap <> ();
         boolean set = true;
         if (configuration.isWorldAndBiome() || configuration.isBiomeTags()) {
             Entity entity = camera.getFocusedEntity();
             RegistryEntry<Biome> biome = entity.getWorld().getBiome(entity.getBlockPos());
             if (configuration.getLastBiome() != null && configuration.getLastBiome().equals(biome)){
-                fogSetting = configuration.getFogSettingHashMap();
+                identifiersFog = configuration.getFogSettingHashMap();
                 set = false;
             } else {
-                HashMap <FogType, HashMap <FloatType, FogSetting>> identifiersFog = new HashMap <> ();
                 HashMap <Identifier, FogConfiguration> identifiersFog1 = configuration.getConfiguration1();
                 int priority = 0;
                 if (configuration.isBiomeTags()){
@@ -72,23 +71,28 @@ public class FogLock {
                             }
                         }
                     }
-                    fogSetting = identifiersFog.get(fogType1);
                 }
             }
             configuration.setLastBiome(biome);
         } else {
             if (configuration.getLastBiome() == null){
                 set = false;
-                fogSetting = configuration.getDefault1().get(fogType1);
+                identifiersFog = configuration.getDefault1();
             }
             configuration.setLastBiome(null);
         }
 
-        if (set && fogSetting == null) {
-            fogSetting = configuration.getDefault1().get(fogType1);
-            configuration.setFogSettingHashMap(fogSetting);
+        if (set && identifiersFog.isEmpty()) {
+            identifiersFog = configuration.getDefault1();
+            configuration.setFogSettingHashMap(identifiersFog);
         } else if (set){
-            configuration.setFogSettingHashMap(fogSetting);
+            configuration.setFogSettingHashMap(identifiersFog);
+        }
+
+
+        HashMap <FloatType, FogSetting> fogSetting = identifiersFog.get(fogType1);
+        if (fogSetting == null){
+            return;
         }
 
         float[] color = RenderSystem.getShaderFogColor();
