@@ -12,6 +12,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
@@ -114,7 +115,20 @@ public class FogLock {
         if (fogSetting.containsKey(FloatType.ALPHA)) {
             color[3] = fogSetting.get(FloatType.ALPHA).get(camera, viewDistance, thickFog);
         }
+        Entity entity = camera.getFocusedEntity();
+        if (entity instanceof LivingEntity livingEntity) {
+            if (livingEntity.hasStatusEffect(StatusEffects.DARKNESS)) {
+                StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.DARKNESS);
+                configuration.getEffectApply().applyDark(fogType, livingEntity, statusEffectInstance, viewDistance, tickDelta);
+
+            }
+            if (livingEntity.hasStatusEffect(StatusEffects.BLINDNESS)) {
+                StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.BLINDNESS);
+                configuration.getEffectApply().applyBlindness(fogType, statusEffectInstance, viewDistance);
+            }
+        }
     }
+
     @Unique
     private static FogType toType(Camera ca, CameraSubmersionType ct) {
         switch (ct) {

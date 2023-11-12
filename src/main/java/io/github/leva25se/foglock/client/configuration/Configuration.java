@@ -1,5 +1,6 @@
 package io.github.leva25se.foglock.client.configuration;
 
+import io.github.leva25se.foglock.client.EffectApply;
 import io.github.leva25se.foglock.client.FloatType;
 import io.github.leva25se.foglock.client.FogType;
 import io.github.leva25se.foglock.client.setting.FogSetting;
@@ -14,8 +15,13 @@ public class Configuration {
     private boolean worldAndBiome;
     private HashMap <Identifier, FogConfiguration> configuration1;
     private HashMap <FogType, HashMap <FloatType, FogSetting>> default1;
+    private final EffectApply effectApply = new EffectApply();
     public HashMap <Identifier, FogConfiguration> getConfiguration1() {
         return configuration1;
+    }
+
+    public EffectApply getEffectApply() {
+        return effectApply;
     }
 
     public HashMap <FogType, HashMap <FloatType, FogSetting>> getDefault1() {
