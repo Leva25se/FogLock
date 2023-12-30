@@ -13,7 +13,7 @@ public class SimpleCalculation implements StringValue {
     public SimpleCalculation(ApplyPlaceholders applyPlaceholders){
         this.applyPlaceholders = applyPlaceholders;
     }
-    private HashMap<String, Float> cache = new HashMap<>();
+    private final HashMap<String, Float> cache = new HashMap<>();
 
     @Override
     public float getValue(String str, Camera camera, float vieDistance, boolean thickFog) {
