@@ -6,12 +6,20 @@ public class FloatFog implements FogSetting {
 
     private final float f;
 
-    public FloatFog(float f) {
+    public FloatFog(float f, long time) {
         this.f = f;
+        this.time = time;
     }
 
     @Override
     public float get(Camera camera, float vieDistance, boolean thickFog) {
         return f;
+    }
+
+    private final long time;
+
+    @Override
+    public long getTime() {
+        return time;
     }
 }

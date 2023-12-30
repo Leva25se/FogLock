@@ -27,17 +27,22 @@ public class FogConfigurationLoader {
                         for (FloatType floatType: FloatType.values()) {
                             String str = floatType.name().toLowerCase();
                             if (jo.has(str)) {
+                                long time = 1;
+                                String str1 = str + "Time";
+                                if (jo.has(str1)) {
+                                    time = jo.get(str1).getAsLong();
+                                }
                                 if (jo.getAsJsonPrimitive(str).isNumber()) {
-                                    floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat()));
+                                    floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat(), time));
                                 } else {
-                                    floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue));
+                                    floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time));
                                 }
                             }
                         }
                         fogSettingCreator.put(fogType, floatHashMap);
                     }
                 }
-                if (fogSettingCreator.keySet().size() > 0) {
+                if (!fogSettingCreator.keySet().isEmpty()) {
                     configuration.put(key, new FogConfiguration(fogSettingCreator, jsonObject1.get("priority").getAsInt()));
                 }
             }
@@ -49,10 +54,15 @@ public class FogConfigurationLoader {
                 for (FloatType floatType: FloatType.values()) {
                     String str = floatType.name().toLowerCase();
                     if (jo.has(str)) {
+                        long time = 1;
+                        String str1 = str + "Time";
+                        if (jo.has(str1)) {
+                            time = jo.get(str1).getAsLong();
+                        }
                         if (jo.getAsJsonPrimitive(str).isNumber()) {
-                            floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat()));
+                            floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat(), time));
                         } else {
-                            floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue));
+                            floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time));
                         }
                     }
                 }

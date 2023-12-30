@@ -4,4 +4,5 @@ import net.minecraft.client.render.Camera;
 
 public interface FogSetting {
     float get(Camera camera, float vieDistance, boolean thickFog);
+    long getTime();
 }

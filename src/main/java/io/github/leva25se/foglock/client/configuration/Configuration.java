@@ -4,6 +4,7 @@ import io.github.leva25se.foglock.client.EffectApply;
 import io.github.leva25se.foglock.client.FloatType;
 import io.github.leva25se.foglock.client.FogType;
 import io.github.leva25se.foglock.client.setting.FogSetting;
+import net.minecraft.client.render.Camera;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -11,6 +12,9 @@ import net.minecraft.world.biome.Biome;
 import java.util.HashMap;
 
 public class Configuration {
+    private final HashMap<FloatType, Float> requireValue = new HashMap<>();
+    private final HashMap<FloatType, Float> nowValue = new HashMap<>();
+    private final HashMap<FloatType, Float> deltaValue = new HashMap<>();
     private boolean biomeTags;
     private boolean worldAndBiome;
     private HashMap <Identifier, FogConfiguration> configuration1;
@@ -61,5 +65,36 @@ public class Configuration {
 
     public boolean isWorldAndBiome() {
         return worldAndBiome;
+    }
+
+    public float getValue(FloatType floatType, HashMap<FloatType, FogSetting> map, Camera camera, float vieDistance, boolean thickFog){
+        FogSetting setting = map.get(floatType);
+        float requireNow = setting.get(camera, vieDistance, thickFog);
+        if (requireValue.containsKey(floatType)) {
+                float now = nowValue.get(floatType);
+                if (requireValue.get(floatType) == requireNow) {
+                    if (now == requireNow){
+                        return requireNow;
+                    } else {
+                        if (Math.abs(now - requireNow) <= 0.005f){
+                            nowValue.put(floatType, requireNow);
+                        } else {
+                            now += deltaValue.get(floatType);
+                            nowValue.put(floatType, now);
+                        }
+                        return now;
+                    }
+                } else {
+                    requireValue.put(floatType, requireNow);
+                    float delta = (requireNow -  now) / setting.getTime();
+                    deltaValue.put(floatType, delta);
+                    return now;
+                }
+        } else {
+            requireValue.put(floatType, requireNow);
+            nowValue.put(floatType, requireNow);
+            deltaValue.put(floatType, 0.0f);
+            return requireNow;
+        }
     }
 }
