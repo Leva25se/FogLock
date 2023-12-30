@@ -1,23 +1,34 @@
 package io.github.leva25se.foglock.client.value;
 
+import io.github.leva25se.foglock.client.FloatType;
 import net.minecraft.client.render.Camera;
+
+import java.util.HashMap;
 
 public class SimpleCalculation implements StringValue {
 
     private final ApplyPlaceholders applyPlaceholders;
+    private final int cacheSize = FloatType.values().length * 5;
 
     public SimpleCalculation(ApplyPlaceholders applyPlaceholders){
         this.applyPlaceholders = applyPlaceholders;
     }
+    private HashMap<String, Float> cache = new HashMap<>();
 
     @Override
     public float getValue(String str, Camera camera, float vieDistance, boolean thickFog) {
         str = applyPlaceholders.applyPlaceholders(str, camera, vieDistance, thickFog);
+        if (cache.containsKey(str)){
+            return cache.get(str);
+        }
+        if (cache.size() > cacheSize) {
+            cache.clear();
+        }
         char[] chars = str.toCharArray();
         float result = 0f;
         boolean first = true;
         StringBuilder stringBuilder1 = new StringBuilder();
-        for (int i  = 0; i <chars.length; i++){
+        for (int i  = 0; i <chars.length; i++) {
             char c1 = chars[i];
             if (Character.isDigit(c1) || c1 == '.') {
                 if (first){
@@ -43,6 +54,7 @@ public class SimpleCalculation implements StringValue {
         if (first){
             result = Float.parseFloat(stringBuilder1.toString());
         }
+        cache.put(str, result);
         return result;
     }
 
