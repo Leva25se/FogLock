@@ -19,7 +19,6 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,13 +28,13 @@ import java.util.List;
 
 @Mixin(value = BackgroundRenderer.class, priority = 1002)
 public class FogLock {
+
     @Inject(at = @At("TAIL"), method = "applyFog")
     private static void setFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
-
         Configuration c = FogLockClient.getConfiguration();
         CameraSubmersionType cameraSubmersionType = camera.getSubmersionType();
-        FogType fogType1 = toType(camera, cameraSubmersionType);
-        HashMap <FogType, HashMap <FloatType, FogSetting>> identifiersFog = new HashMap <> ();
+        FogType fogType1 = c.getType(camera, cameraSubmersionType);
+        HashMap <FogType, HashMap <FloatType, FogSetting>> identifiersFog = new HashMap <>();
         boolean set = true;
         if (c.isWorldAndBiome() || c.isBiomeTags()) {
             Entity entity = camera.getFocusedEntity();
@@ -82,20 +81,16 @@ public class FogLock {
             }
             c.setLastBiome(null);
         }
-
         if (set && identifiersFog.isEmpty()) {
             identifiersFog = c.getDefault1();
             c.setFogSettingHashMap(identifiersFog);
         } else if (set){
             c.setFogSettingHashMap(identifiersFog);
         }
-
-
         HashMap <FloatType, FogSetting> fogSetting = identifiersFog.get(fogType1);
         if (fogSetting == null) {
             return;
         }
-
         float[] color = RenderSystem.getShaderFogColor();
         if (fogSetting.containsKey(FloatType.START)) {
             RenderSystem.setShaderFogStart(c.getValue(FloatType.START, fogSetting, camera, viewDistance, thickFog));
@@ -120,37 +115,10 @@ public class FogLock {
             if (livingEntity.hasStatusEffect(StatusEffects.DARKNESS)) {
                 StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.DARKNESS);
                 c.getEffectApply().applyDark(fogType, livingEntity, statusEffectInstance, viewDistance, tickDelta);
-
             }
             if (livingEntity.hasStatusEffect(StatusEffects.BLINDNESS)) {
                 StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.BLINDNESS);
                 c.getEffectApply().applyBlindness(fogType, statusEffectInstance, viewDistance);
-            }
-        }
-    }
-
-    @Unique
-    private static FogType toType(Camera ca, CameraSubmersionType ct) {
-        switch (ct) {
-            case LAVA -> {
-                Entity entity = ca.getFocusedEntity();
-                if (entity instanceof LivingEntity && ((LivingEntity) entity).hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
-                    return FogType.LAVA_FIRE_RESISTANCE;
-                } else {
-                    return FogType.LAVA;
-                }
-            }
-            case WATER -> {
-                return FogType.WATER;
-            }
-            case POWDER_SNOW -> {
-                return FogType.POWDER_SNOW;
-            }
-            case NONE -> {
-                return FogType.NONE;
-            }
-            default -> {
-                return FogType.UNDEFINED;
             }
         }
     }

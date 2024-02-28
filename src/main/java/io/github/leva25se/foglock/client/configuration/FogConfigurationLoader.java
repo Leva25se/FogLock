@@ -19,11 +19,11 @@ public class FogConfigurationLoader {
             for (int i = 0; i <array.size(); i++) {
                 JsonObject jsonObject1 = array.get(i).getAsJsonObject();
                 Identifier key = new Identifier(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
-                HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingCreator = new HashMap <> ();
+                HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingCreator = new HashMap <>();
                 for (FogType fogType: FogType.values()) {
                     if (jsonObject1.has(fogType.name())) {
                         JsonObject jo = jsonObject1.get(fogType.name()).getAsJsonObject();
-                        HashMap <FloatType, FogSetting> floatHashMap = new HashMap <> ();
+                        HashMap <FloatType, FogSetting> floatHashMap = new HashMap <>();
                         for (FloatType floatType: FloatType.values()) {
                             String str = floatType.name().toLowerCase();
                             if (jo.has(str)) {
@@ -50,7 +50,7 @@ public class FogConfigurationLoader {
         for (FogType fogType: FogType.values()) {
             if (jsonObject.has(fogType.name())) {
                 JsonObject jo = jsonObject.get(fogType.name()).getAsJsonObject();
-                HashMap <FloatType, FogSetting> floatHashMap = new HashMap <> ();
+                HashMap <FloatType, FogSetting> floatHashMap = new HashMap <>();
                 for (FloatType floatType: FloatType.values()) {
                     String str = floatType.name().toLowerCase();
                     if (jo.has(str)) {

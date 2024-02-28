@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.github.leva25se.foglock.client.configuration.Configuration;
 import io.github.leva25se.foglock.client.configuration.ConfigurationManager;
-import io.github.leva25se.foglock.client.configuration.FogConfigurationLoader;
 import io.github.leva25se.foglock.client.configuration.FogConfiguration;
+import io.github.leva25se.foglock.client.configuration.FogConfigurationLoader;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.value.*;
 import net.fabricmc.api.ClientModInitializer;
@@ -18,7 +18,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public class FogLockClient implements ClientModInitializer {
 
@@ -40,17 +39,13 @@ public class FogLockClient implements ClientModInitializer {
         }
         try {
             JsonObject json = new Gson().fromJson(new FileReader(file), JsonObject.class);
-            HashMap <Identifier, FogConfiguration> configuration1 = new HashMap <> ();
-            HashMap <FogType, HashMap <FloatType, FogSetting>> default1 = new HashMap <> ();
+            HashMap <Identifier, FogConfiguration> configuration1 = new HashMap <>();
+            HashMap <FogType, HashMap <FloatType, FogSetting>> default1 = new HashMap <>();
             StringValue stringValue;
             ApplyPlaceholders applyPlaceholders = new ApplyPlaceholders();
-            switch (json.get("calculation").getAsString()) {
-                case "simple" -> stringValue = new SimpleCalculation(applyPlaceholders);
-                case "advanced" -> {
-                    Logger logger = Logger.getLogger("FogLock");
-                    logger.warning("Advanced calculation mode not ready, using simple calculation mode");
-                    stringValue = new AdvancedCalculation(applyPlaceholders);
-                }
+            switch (json.get("mathModule").getAsString().toLowerCase()) {
+                case "simple" -> stringValue = new SimpleMathModule(applyPlaceholders);
+                case "advanced" -> stringValue = new AdvancedMathModule(applyPlaceholders);
                 default -> stringValue = new Value();
             }
             new FogConfigurationLoader(json, stringValue, configuration1, default1);

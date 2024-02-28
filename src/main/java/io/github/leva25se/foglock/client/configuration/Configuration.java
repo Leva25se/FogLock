@@ -5,6 +5,10 @@ import io.github.leva25se.foglock.client.FloatType;
 import io.github.leva25se.foglock.client.FogType;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.CameraSubmersionType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -95,6 +99,31 @@ public class Configuration {
             nowValue.put(floatType, requireNow);
             deltaValue.put(floatType, 0.0f);
             return requireNow;
+        }
+    }
+
+    public FogType getType(Camera ca, CameraSubmersionType ct) {
+        switch (ct) {
+            case LAVA -> {
+                Entity entity = ca.getFocusedEntity();
+                if (entity instanceof LivingEntity && ((LivingEntity) entity).hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+                    return FogType.LAVA_FIRE_RESISTANCE;
+                } else {
+                    return FogType.LAVA;
+                }
+            }
+            case WATER -> {
+                return FogType.WATER;
+            }
+            case POWDER_SNOW -> {
+                return FogType.POWDER_SNOW;
+            }
+            case NONE -> {
+                return FogType.NONE;
+            }
+            default -> {
+                return FogType.UNDEFINED;
+            }
         }
     }
 }

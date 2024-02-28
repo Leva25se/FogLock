@@ -5,12 +5,12 @@ import net.minecraft.client.render.Camera;
 
 import java.util.HashMap;
 
-public class SimpleCalculation implements StringValue {
+public class SimpleMathModule implements StringValue {
 
     private final ApplyPlaceholders applyPlaceholders;
     private final int cacheSize = FloatType.values().length * 5;
 
-    public SimpleCalculation(ApplyPlaceholders applyPlaceholders){
+    public SimpleMathModule(ApplyPlaceholders applyPlaceholders){
         this.applyPlaceholders = applyPlaceholders;
     }
     private final HashMap<String, Float> cache = new HashMap<>();
@@ -48,6 +48,8 @@ public class SimpleCalculation implements StringValue {
                     case '/' -> result /= f;
                     case 'x' -> result = Math.max(result, f);
                     case 'n' -> result = Math.min(result, f);
+                    case '>' -> result = result > f ? 1 : -1;
+                    case '<' -> result = result < f ? 1 : -1;
                 }
             }
         }
