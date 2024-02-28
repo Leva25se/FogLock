@@ -28,7 +28,6 @@ import java.util.List;
 
 @Mixin(value = BackgroundRenderer.class, priority = 1002)
 public class FogLock {
-
     @Inject(at = @At("TAIL"), method = "applyFog")
     private static void setFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
         Configuration c = FogLockClient.getConfiguration();
@@ -112,12 +111,14 @@ public class FogLock {
         }
         Entity entity = camera.getFocusedEntity();
         if (entity instanceof LivingEntity livingEntity) {
-            if (livingEntity.hasStatusEffect(StatusEffects.DARKNESS)) {
+            {
                 StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.DARKNESS);
-                c.getEffectApply().applyDark(fogType, livingEntity, statusEffectInstance, viewDistance, tickDelta);
+                if (statusEffectInstance != null) {
+                    c.getEffectApply().applyDark(fogType, livingEntity, statusEffectInstance, viewDistance, tickDelta);
+                }
             }
-            if (livingEntity.hasStatusEffect(StatusEffects.BLINDNESS)) {
-                StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.BLINDNESS);
+            StatusEffectInstance statusEffectInstance = livingEntity.getStatusEffect(StatusEffects.BLINDNESS);
+            if (statusEffectInstance != null) {
                 c.getEffectApply().applyBlindness(fogType, statusEffectInstance, viewDistance);
             }
         }

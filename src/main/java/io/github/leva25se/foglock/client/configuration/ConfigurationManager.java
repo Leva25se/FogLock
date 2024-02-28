@@ -31,7 +31,7 @@ public class ConfigurationManager {
             none.put("startTime", 250);
             none.put("endTime", 250);
             none.put("b", 2);
-            none.put("alpha", 0.25);
+            none.put("alpha", 1);
             json.put("identifiers", generateTagList());
             json.put("NONE", none);
             write(json);
