@@ -20,11 +20,9 @@ public class EffectApply {
     }
 
     public void applyDark(BackgroundRenderer.FogType fogType, LivingEntity entity, StatusEffectInstance effect, float viewDistance, float tickDelta) {
-        if (effect.getFactorCalculationData().isPresent()) {
-            float f = MathHelper.lerp(effect.getFactorCalculationData().get().lerp(entity, tickDelta), viewDistance, 15.0F);
-            RenderSystem.setShaderFogStart(fogType == BackgroundRenderer.FogType.FOG_SKY ? 0.0F : f * 0.75F);
-            RenderSystem.setShaderFogEnd(f);
-        }
+        float f = MathHelper.lerp(effect.getFadeFactor(entity, tickDelta), viewDistance, 15.0F);
+        RenderSystem.setShaderFogStart(fogType == BackgroundRenderer.FogType.FOG_SKY ? 0.0F : f * 0.75F);
+        RenderSystem.setShaderFogEnd(f);
     }
 
 }
