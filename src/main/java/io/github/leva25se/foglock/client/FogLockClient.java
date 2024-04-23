@@ -2,10 +2,12 @@ package io.github.leva25se.foglock.client;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.github.leva25se.foglock.client.configuration.Configuration;
 import io.github.leva25se.foglock.client.configuration.ConfigurationManager;
 import io.github.leva25se.foglock.client.configuration.FogConfiguration;
 import io.github.leva25se.foglock.client.configuration.FogConfigurationLoader;
+import io.github.leva25se.foglock.client.fog.CustomFog;
+import io.github.leva25se.foglock.client.fog.FloatType;
+import io.github.leva25se.foglock.client.fog.FogType;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.value.*;
 import net.fabricmc.api.ClientModInitializer;
@@ -21,10 +23,10 @@ import java.util.HashMap;
 
 public class FogLockClient implements ClientModInitializer {
 
-    private static final Configuration configuration = new Configuration();
+    private static CustomFog customFog;
 
-    public static Configuration getConfiguration() {
-        return FogLockClient.configuration;
+    public static CustomFog getCustomFog() {
+        return customFog;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class FogLockClient implements ClientModInitializer {
         }
         try {
             JsonObject json = new Gson().fromJson(new FileReader(file), JsonObject.class);
-            HashMap <Identifier, FogConfiguration> configuration1 = new HashMap <>();
+            HashMap <Identifier, FogConfiguration> configuration = new HashMap <>();
             HashMap <FogType, HashMap <FloatType, FogSetting>> default1 = new HashMap <>();
             StringValue stringValue;
             ApplyPlaceholders applyPlaceholders = new ApplyPlaceholders();
@@ -48,11 +50,18 @@ public class FogLockClient implements ClientModInitializer {
                 case "advanced" -> stringValue = new AdvancedMathModule(applyPlaceholders);
                 default -> stringValue = new Value();
             }
-            new FogConfigurationLoader(json, stringValue, configuration1, default1);
-            configuration.set(configuration1, default1, json.get("worldAndBiomeEnable").getAsBoolean(), json.get("biomeTagsEnable").getAsBoolean());
+            new FogConfigurationLoader(json, stringValue, configuration, default1);
+
+            customFog = new CustomFog(getBoolean(json,"biomeTagsEnable"), getBoolean(json,"worldAndBiomeEnable"), configuration, default1, true);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private boolean getBoolean(JsonObject jsonObject, String key){
+        if (jsonObject.has(key)){
+            return jsonObject.get(key).getAsBoolean();
+        }
+        return false;
     }
 }

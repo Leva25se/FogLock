@@ -2,8 +2,8 @@ package io.github.leva25se.foglock.client.configuration;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.leva25se.foglock.client.FloatType;
-import io.github.leva25se.foglock.client.FogType;
+import io.github.leva25se.foglock.client.fog.FloatType;
+import io.github.leva25se.foglock.client.fog.FogType;
 import io.github.leva25se.foglock.client.setting.FloatFog;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.setting.StringFog;

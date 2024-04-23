@@ -1,6 +1,6 @@
 package io.github.leva25se.foglock.client.value;
 
-import io.github.leva25se.foglock.client.FloatType;
+import io.github.leva25se.foglock.client.fog.FloatType;
 import net.minecraft.client.render.Camera;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class AdvancedMathModule implements StringValue  {
             elements.set(index, result);
             elements.remove(index + 1);
         }
-        float result = elements.get(0);
+        float result = elements.getFirst();
         cache.put(str, result);
         return result;
     }

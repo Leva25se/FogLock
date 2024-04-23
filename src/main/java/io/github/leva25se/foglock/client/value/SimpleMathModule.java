@@ -1,6 +1,6 @@
 package io.github.leva25se.foglock.client.value;
 
-import io.github.leva25se.foglock.client.FloatType;
+import io.github.leva25se.foglock.client.fog.FloatType;
 import net.minecraft.client.render.Camera;
 
 import java.util.HashMap;

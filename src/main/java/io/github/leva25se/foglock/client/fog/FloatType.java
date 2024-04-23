@@ -1,4 +1,4 @@
-package io.github.leva25se.foglock.client;
+package io.github.leva25se.foglock.client.fog;
 
 public enum FloatType {
     START,
