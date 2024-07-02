@@ -2,7 +2,7 @@ package io.github.leva25se.foglock.client.fog;
 
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.CameraSubmersionType;
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;

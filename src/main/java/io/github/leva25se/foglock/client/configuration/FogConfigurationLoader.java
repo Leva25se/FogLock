@@ -18,7 +18,7 @@ public class FogConfigurationLoader {
             JsonArray array = jsonObject.get("identifiers").getAsJsonArray();
             for (int i = 0; i <array.size(); i++) {
                 JsonObject jsonObject1 = array.get(i).getAsJsonObject();
-                Identifier key = new Identifier(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
+                Identifier key = Identifier.of(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
                 HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingCreator = new HashMap <>();
                 for (FogType fogType: FogType.values()) {
                     if (jsonObject1.has(fogType.name())) {
