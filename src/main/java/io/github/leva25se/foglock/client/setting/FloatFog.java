@@ -5,6 +5,7 @@ import net.minecraft.client.render.Camera;
 public class FloatFog implements FogSetting {
 
     private final float f;
+    private final long time;
 
     public FloatFog(float f, long time) {
         this.f = f;
@@ -12,11 +13,9 @@ public class FloatFog implements FogSetting {
     }
 
     @Override
-    public float get(Camera camera, float vieDistance, boolean thickFog) {
+    public float get(Camera camera, float vieDistance, boolean thickFog, float current) {
         return f;
     }
-
-    private final long time;
 
     @Override
     public long getTime() {

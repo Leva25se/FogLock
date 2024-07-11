@@ -7,18 +7,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class AdvancedMathModule implements StringValue  {
+public class AdvancedMathModule implements StringValue {
 
     private final ApplyPlaceholders applyPlaceholders;
     private final int cacheSize = FloatType.values().length * 5;
     private final HashMap<String, Float> cache = new HashMap<>();
-    public AdvancedMathModule(ApplyPlaceholders applyPlaceholders){
+
+    public AdvancedMathModule(ApplyPlaceholders applyPlaceholders) {
         this.applyPlaceholders = applyPlaceholders;
     }
+
+    private static float getResult(ArrayList<Float> elements, int index, ArrayList<Character> actions) {
+        float f = elements.get(index);
+        float f1 = elements.get(index + 1);
+        float result = 0;
+        switch (actions.get(index)) {
+            case '+' -> result = f + f1;
+            case '-' -> result = f - f1;
+            case '*' -> result = f * f1;
+            case '/' -> result = f / f1;
+            case '^' -> result = (float) Math.pow(f, f1);
+            case 'n' -> result = Math.min(f, f1);
+            case 'x' -> result = Math.max(f, f1);
+            case '|' -> result = f != 0 ? f : f1;
+            case '&' -> result = f != 0 && f1 != 0 ? 1 : 0;
+            case '>' -> result = result > f ? 1 : -1;
+            case '<' -> result = result < f ? 1 : -1;
+        }
+        return result;
+    }
+
     @Override
-    public float getValue(String str, Camera camera, float vieDistance, boolean thickFog) {
-        str = applyPlaceholders.applyPlaceholders(str, camera, vieDistance, thickFog);
-        if (cache.containsKey(str)){
+    public float getValue(String str, Camera camera, float vieDistance, boolean thickFog, float current) {
+        str = applyPlaceholders.applyPlaceholders(str, camera, vieDistance, thickFog, current);
+        if (cache.containsKey(str)) {
             return cache.get(str);
         }
         if (cache.size() > cacheSize) {
@@ -31,8 +53,8 @@ public class AdvancedMathModule implements StringValue  {
         int deep = 0;
         char[] chars = str.toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
-        for (char c : chars){
-            if (Character.isDigit(c) || c == '.'){
+        for (char c : chars) {
+            if (Character.isDigit(c) || c == '.') {
                 stringBuilder.append(c);
             } else {
                 if (!stringBuilder.isEmpty()) {
@@ -42,8 +64,14 @@ public class AdvancedMathModule implements StringValue  {
                 switch (c) {
                     case '(' -> deep += 10;
                     case ')' -> deep -= 10;
-                    case '+', '-' -> {priority.add(deep + 1); actions.add(c);}
-                    case '*', '/', '^' -> {priority.add(deep + 2); actions.add(c);}
+                    case '+', '-' -> {
+                        priority.add(deep + 1);
+                        actions.add(c);
+                    }
+                    case '*', '/', '^' -> {
+                        priority.add(deep + 2);
+                        actions.add(c);
+                    }
                     default -> {
                         priority.add(deep);
                         actions.add(c);
@@ -54,7 +82,7 @@ public class AdvancedMathModule implements StringValue  {
         if (!stringBuilder.isEmpty()) {
             elements.add(Float.valueOf(stringBuilder.toString()));
         }
-        while (!priority.isEmpty()){
+        while (!priority.isEmpty()) {
             int index = priority.indexOf(Collections.max(priority));
             priority.remove(index);
             float result = getResult(elements, index, actions);
@@ -64,23 +92,6 @@ public class AdvancedMathModule implements StringValue  {
         }
         float result = elements.getFirst();
         cache.put(str, result);
-        return result;
-    }
-
-    private static float getResult(ArrayList<Float> elements, int index, ArrayList<Character> actions) {
-        float f = elements.get(index);
-        float f1 = elements.get(index + 1);
-        float result = 0;
-        switch (actions.get(index)){
-            case '+' -> result = f + f1;
-            case '-' -> result = f - f1;
-            case '*' -> result = f * f1;
-            case '/' -> result = f / f1;
-            case '^' -> result = (float) Math.pow(f, f1);
-            case 'n' -> result = Math.min(f, f1);
-            case 'x' -> result = Math.max(f, f1);
-            case '|' -> result = f != 0 ? f : f1;
-        }
         return result;
     }
 }

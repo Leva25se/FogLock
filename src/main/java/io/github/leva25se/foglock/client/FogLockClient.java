@@ -1,6 +1,7 @@
 package io.github.leva25se.foglock.client;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.leva25se.foglock.client.configuration.ConfigurationManager;
 import io.github.leva25se.foglock.client.configuration.FogConfiguration;
@@ -19,7 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FogLockClient implements ClientModInitializer {
 
@@ -41,8 +44,8 @@ public class FogLockClient implements ClientModInitializer {
         }
         try {
             JsonObject json = new Gson().fromJson(new FileReader(file), JsonObject.class);
-            HashMap <Identifier, FogConfiguration> configuration = new HashMap <>();
-            HashMap <FogType, HashMap <FloatType, FogSetting>> default1 = new HashMap <>();
+            HashMap<Identifier, FogConfiguration> configuration = new HashMap<>();
+            HashMap<FogType, HashMap<FloatType, FogSetting>> default1 = new HashMap<>();
             StringValue stringValue;
             ApplyPlaceholders applyPlaceholders = new ApplyPlaceholders();
             switch (json.get("mathModule").getAsString().toLowerCase()) {
@@ -51,15 +54,19 @@ public class FogLockClient implements ClientModInitializer {
                 default -> stringValue = new Value();
             }
             new FogConfigurationLoader(json, stringValue, configuration, default1);
+            List<String> potions = new ArrayList<>();
+            for (JsonElement jsonElement : json.getAsJsonArray("potions")) {
+                potions.add(jsonElement.getAsString());
+            }
 
-            customFog = new CustomFog(getBoolean(json,"biomeTagsEnable"), getBoolean(json,"worldAndBiomeEnable"), configuration, default1, true);
+            customFog = new CustomFog(getBoolean(json, "biomeTagsEnable"), getBoolean(json, "worldAndBiomeEnable"), configuration, default1, potions, json.get("potionApplyTime").getAsLong());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private boolean getBoolean(JsonObject jsonObject, String key){
-        if (jsonObject.has(key)){
+    private boolean getBoolean(JsonObject jsonObject, String key) {
+        if (jsonObject.has(key)) {
             return jsonObject.get(key).getAsBoolean();
         }
         return false;

@@ -13,18 +13,18 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 
 public class FogConfigurationLoader {
-    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<Identifier, FogConfiguration> configuration, HashMap <FogType, HashMap <FloatType, FogSetting>> default1) {
+    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<Identifier, FogConfiguration> configuration, HashMap<FogType, HashMap<FloatType, FogSetting>> default1) {
         if (jsonObject.has("identifiers")) {
             JsonArray array = jsonObject.get("identifiers").getAsJsonArray();
-            for (int i = 0; i <array.size(); i++) {
+            for (int i = 0; i < array.size(); i++) {
                 JsonObject jsonObject1 = array.get(i).getAsJsonObject();
                 Identifier key = Identifier.of(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
-                HashMap <FogType, HashMap <FloatType, FogSetting>> fogSettingCreator = new HashMap <>();
-                for (FogType fogType: FogType.values()) {
+                HashMap<FogType, HashMap<FloatType, FogSetting>> fogSettingCreator = new HashMap<>();
+                for (FogType fogType : FogType.values()) {
                     if (jsonObject1.has(fogType.name())) {
                         JsonObject jo = jsonObject1.get(fogType.name()).getAsJsonObject();
-                        HashMap <FloatType, FogSetting> floatHashMap = new HashMap <>();
-                        for (FloatType floatType: FloatType.values()) {
+                        HashMap<FloatType, FogSetting> floatHashMap = new HashMap<>();
+                        for (FloatType floatType : FloatType.values()) {
                             String str = floatType.name().toLowerCase();
                             if (jo.has(str)) {
                                 long time = 1;
@@ -47,15 +47,15 @@ public class FogConfigurationLoader {
                 }
             }
         }
-        for (FogType fogType: FogType.values()) {
+        for (FogType fogType : FogType.values()) {
             if (jsonObject.has(fogType.name())) {
                 JsonObject jo = jsonObject.get(fogType.name()).getAsJsonObject();
-                HashMap <FloatType, FogSetting> floatHashMap = new HashMap <>();
-                for (FloatType floatType: FloatType.values()) {
+                HashMap<FloatType, FogSetting> floatHashMap = new HashMap<>();
+                for (FloatType floatType : FloatType.values()) {
                     String str = floatType.name().toLowerCase();
+                    String str1 = str + "Time";
                     if (jo.has(str)) {
                         long time = 1;
-                        String str1 = str + "Time";
                         if (jo.has(str1)) {
                             time = jo.get(str1).getAsLong();
                         }
@@ -64,6 +64,8 @@ public class FogConfigurationLoader {
                         } else {
                             floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time));
                         }
+                    } else if (jo.has(str1)) {
+                        floatHashMap.put(floatType, new FloatFog(-1, jo.get(str1).getAsLong()));
                     }
                 }
                 default1.put(fogType, floatHashMap);

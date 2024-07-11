@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FogLock {
     @Inject(at = @At("TAIL"), method = "applyFog")
     private static void setFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
-        FogLockClient.getCustomFog().setFog(camera, fogType, viewDistance, thickFog, tickDelta);
+        FogLockClient.getCustomFog().setFog(camera, viewDistance, thickFog);
     }
 }
