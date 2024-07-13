@@ -30,8 +30,8 @@ body:
       placeholder: |
         Minecraft 1.21
         Fabric Loader 0.16.0
-      validations:
-          required: true
+    validations:
+        required: true
   - type: input
     id: foglock-version
     attributes:
