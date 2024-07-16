@@ -120,7 +120,6 @@ public class CustomFog {
             if (potions.contains(effect.getEffectType().getIdAsString())) {
                 return true;
             }
-            System.out.println(effect.getEffectType().getIdAsString());
         }
         return false;
     }
