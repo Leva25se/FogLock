@@ -5,6 +5,7 @@ import io.github.leva25se.foglock.client.configuration.FogConfiguration;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Fog;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -36,13 +37,14 @@ public class CustomFog {
     }
 
 
-    public void setFog(Camera camera, float viewDistance, boolean thickFog) {
+    public Fog setFog(Camera camera, Fog fog, float viewDistance, boolean thickenFog) {
         if (camera.getFocusedEntity() instanceof LivingEntity livingEntity) {
-            applyCustom(livingEntity, camera, viewDistance, thickFog, checkEffect(livingEntity));
+            return applyCustom(livingEntity, camera, fog, checkEffect(livingEntity), viewDistance, thickenFog);
         }
+        return null;
     }
 
-    private void applyCustom(LivingEntity entity, Camera camera, float viewDistance, boolean thickFog, boolean potion) {
+    private Fog applyCustom(LivingEntity entity, Camera camera, Fog fog, boolean potion,  float viewDistance, boolean thickenFog) {
         CameraSubmersionType cST = camera.getSubmersionType();
         FogType fogType = valueHelper.getType(camera, cST);
 
@@ -102,17 +104,17 @@ public class CustomFog {
         }
         HashMap<FloatType, FogSetting> fogSetting = identifiersFog.get(fogType);
         if (fogSetting == null) {
-            return;
+            return null;
         }
 
-
-        float[] color = RenderSystem.getShaderFogColor();
-        RenderSystem.setShaderFogStart(valueHelper.getValue(FloatType.START, fogSetting, camera, viewDistance, thickFog, RenderSystem.getShaderFogStart(), potion));
-        RenderSystem.setShaderFogEnd(valueHelper.getValue(FloatType.END, fogSetting, camera, viewDistance, thickFog, RenderSystem.getShaderFogEnd(), potion));
-        color[0] = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickFog, color[0], potion);
-        color[1] = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickFog, color[1], potion);
-        color[2] = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickFog, color[2], potion);
-        color[3] = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickFog, color[3], potion);
+        float[] color = RenderSystem.getShaderColor();
+        float start = valueHelper.getValue(FloatType.START, fogSetting, camera, viewDistance, thickenFog, fog.start(), potion);
+        float end = valueHelper.getValue(FloatType.END, fogSetting, camera, viewDistance, thickenFog, fog.end(), potion);
+        float red = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickenFog, color[0], potion);
+        float green = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickenFog, color[2], potion);
+        float blue = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickenFog, color[2], potion);
+        float alpha = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickenFog, color[3], potion);
+        return new Fog(start, end, fog.shape(), red, green, blue, alpha);
     }
 
     private boolean checkEffect(LivingEntity livingEntity) {

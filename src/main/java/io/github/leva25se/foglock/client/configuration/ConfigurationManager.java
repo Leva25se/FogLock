@@ -35,7 +35,7 @@ public class ConfigurationManager {
             none.put("rTime", 1800);
             none.put("gTime", 1800);
             none.put("bTime", 2500);
-            none.put("b", 2);
+            none.put("b", 1);
             none.put("alpha", 1);
             json.put("identifiers", generateTagList());
             json.put("NONE", none);
