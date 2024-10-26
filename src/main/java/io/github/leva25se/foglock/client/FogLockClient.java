@@ -35,7 +35,7 @@ public class FogLockClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Path path = FabricLoader.getInstance().getConfigDir();
-        File file = new File(path + "\\FogLock.json");
+        File file = new File(path.toString(), "FogLock.json");
         try {
             ConfigurationManager fileManager = new ConfigurationManager(file);
             fileManager.update();
