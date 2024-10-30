@@ -1,6 +1,5 @@
 package io.github.leva25se.foglock.client.fog;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.leva25se.foglock.client.configuration.FogConfiguration;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.block.enums.CameraSubmersionType;
@@ -107,13 +106,12 @@ public class CustomFog {
             return null;
         }
 
-        float[] color = RenderSystem.getShaderColor();
         float start = valueHelper.getValue(FloatType.START, fogSetting, camera, viewDistance, thickenFog, fog.start(), potion);
         float end = valueHelper.getValue(FloatType.END, fogSetting, camera, viewDistance, thickenFog, fog.end(), potion);
-        float red = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickenFog, color[0], potion);
-        float green = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickenFog, color[2], potion);
-        float blue = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickenFog, color[2], potion);
-        float alpha = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickenFog, color[3], potion);
+        float red = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickenFog, fog.red(), potion);
+        float green = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickenFog, fog.green(), potion);
+        float blue = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickenFog, fog.blue(), potion);
+        float alpha = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickenFog, fog.alpha(), potion);
         return new Fog(start, end, fog.shape(), red, green, blue, alpha);
     }
 
