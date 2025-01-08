@@ -1,10 +1,10 @@
 package io.github.leva25se.foglock.client.value;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.Camera;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
+
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,8 +15,8 @@ public class ApplyPlaceholders {
     public String applyPlaceholders(String str, Camera camera, float vieDistance, boolean thickFog, float current) {
         Matcher matcher = pattern.matcher(str);
         StringBuilder stringBuilder = new StringBuilder(str);
-        Entity entity = camera.getFocusedEntity();
-        World world = MinecraftClient.getInstance().world;
+        Entity entity = camera.getEntity();
+        net.minecraft.world.level.Level world = Minecraft.getInstance().level;
         if (world == null) {
             return str;
         }
@@ -28,7 +28,7 @@ public class ApplyPlaceholders {
                 case "{thickFog}" ->
                         stringBuilder.replace(matcher.start(), matcher.end(), String.valueOf(thickFog ? 1 : 0));
                 case "{underwaterVisibility}" ->
-                        stringBuilder.replace(matcher.start(), matcher.end(), (entity instanceof ClientPlayerEntity) ? String.valueOf(((ClientPlayerEntity) entity).getUnderwaterVisibility()) : "0");
+                        stringBuilder.replace(matcher.start(), matcher.end(), (entity instanceof LocalPlayer) ? String.valueOf(((LocalPlayer) entity).getWaterVision()) : "0");
                 case "{value}" -> stringBuilder.replace(matcher.start(), matcher.end(), String.valueOf(current));
             }
         }

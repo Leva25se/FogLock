@@ -1,6 +1,7 @@
 package io.github.leva25se.foglock.client.value;
 
-import net.minecraft.client.render.Camera;
+
+import net.minecraft.client.Camera;
 
 public class Value implements StringValue {
     @Override

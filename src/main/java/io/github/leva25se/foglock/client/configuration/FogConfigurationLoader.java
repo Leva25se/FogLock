@@ -8,17 +8,17 @@ import io.github.leva25se.foglock.client.setting.FloatFog;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.setting.StringFog;
 import io.github.leva25se.foglock.client.value.StringValue;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 
 public class FogConfigurationLoader {
-    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<Identifier, FogConfiguration> configuration, HashMap<FogType, HashMap<FloatType, FogSetting>> default1) {
+    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<ResourceLocation, FogConfiguration> configuration, HashMap<FogType, HashMap<FloatType, FogSetting>> default1) {
         if (jsonObject.has("identifiers")) {
             JsonArray array = jsonObject.get("identifiers").getAsJsonArray();
             for (int i = 0; i < array.size(); i++) {
                 JsonObject jsonObject1 = array.get(i).getAsJsonObject();
-                Identifier key = Identifier.of(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
+                ResourceLocation key = ResourceLocation.fromNamespaceAndPath(jsonObject1.get("namespace").getAsString(), jsonObject1.get("path").getAsString());
                 HashMap<FogType, HashMap<FloatType, FogSetting>> fogSettingCreator = new HashMap<>();
                 for (FogType fogType : FogType.values()) {
                     if (jsonObject1.has(fogType.name())) {

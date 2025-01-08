@@ -3,10 +3,12 @@
   "minVersion": "0.8",
   "package": "io.github.leva25se.foglock.mixin",
   "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "server": [],
   "client": [
-    "FogLock"
+    "FogRendererMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

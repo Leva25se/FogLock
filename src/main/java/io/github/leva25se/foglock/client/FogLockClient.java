@@ -13,7 +13,7 @@ import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.value.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +44,7 @@ public class FogLockClient implements ClientModInitializer {
         }
         try {
             JsonObject json = new Gson().fromJson(new FileReader(file), JsonObject.class);
-            HashMap<Identifier, FogConfiguration> configuration = new HashMap<>();
+            HashMap<ResourceLocation, FogConfiguration> configuration = new HashMap<>();
             HashMap<FogType, HashMap<FloatType, FogSetting>> default1 = new HashMap<>();
             StringValue stringValue;
             ApplyPlaceholders applyPlaceholders = new ApplyPlaceholders();

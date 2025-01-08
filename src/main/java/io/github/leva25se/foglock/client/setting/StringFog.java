@@ -1,7 +1,7 @@
 package io.github.leva25se.foglock.client.setting;
 
 import io.github.leva25se.foglock.client.value.StringValue;
-import net.minecraft.client.render.Camera;
+import net.minecraft.client.Camera;
 
 public class StringFog implements FogSetting {
     private final String str;

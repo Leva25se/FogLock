@@ -1,7 +1,7 @@
 package io.github.leva25se.foglock.client.value;
 
 import io.github.leva25se.foglock.client.fog.FloatType;
-import net.minecraft.client.render.Camera;
+import net.minecraft.client.Camera;
 
 import java.util.ArrayList;
 import java.util.Collections;

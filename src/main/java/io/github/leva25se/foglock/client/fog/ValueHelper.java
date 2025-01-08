@@ -1,11 +1,10 @@
 package io.github.leva25se.foglock.client.fog;
 
 import io.github.leva25se.foglock.client.setting.FogSetting;
-import net.minecraft.block.enums.CameraSubmersionType;
-import net.minecraft.client.render.Camera;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.client.Camera;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.HashMap;
 
@@ -96,11 +95,11 @@ public class ValueHelper {
         return requireNow;
     }
 
-    public FogType getType(Camera ca, CameraSubmersionType ct) {
+    public FogType getType(Camera ca, net.minecraft.world.level.material.FogType ct) {
         switch (ct) {
             case LAVA -> {
-                Entity entity = ca.getFocusedEntity();
-                if (entity instanceof LivingEntity && ((LivingEntity) entity).hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+                Entity entity = ca.getEntity();
+                if (entity instanceof LivingEntity && ((LivingEntity) entity).hasEffect(MobEffects.FIRE_RESISTANCE)) {
                     return FogType.LAVA_FIRE_RESISTANCE;
                 } else {
                     return FogType.LAVA;
