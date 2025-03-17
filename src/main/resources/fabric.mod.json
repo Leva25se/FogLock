@@ -19,6 +19,9 @@
     ],
     "main": [
       "io.github.leva25se.foglock.FogLock"
+    ],
+    "modmenu": [
+      "io.github.leva25se.foglock.menu.ModMenuIntegration"
     ]
   },
   "mixins": [

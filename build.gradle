@@ -1,7 +1,6 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.9-SNAPSHOT'
     id 'maven-publish'
-
 }
 
 version = project.mod_version
@@ -13,6 +12,7 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
@@ -20,8 +20,8 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    }
+    modApi "com.terraformersmc:modmenu:13.0.0"
+}
 
 processResources {
     inputs.property "version", project.version

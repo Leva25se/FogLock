@@ -11,6 +11,7 @@ import io.github.leva25se.foglock.client.fog.FloatType;
 import io.github.leva25se.foglock.client.fog.FogType;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.value.*;
+import io.github.leva25se.foglock.client.value.advanced.AdvancedMathModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
@@ -27,13 +28,23 @@ import java.util.List;
 public class FogLockClient implements ClientModInitializer {
 
     private static CustomFog customFog;
+    private static FogLockClient fogLockClient;
 
     public static CustomFog getCustomFog() {
         return customFog;
     }
 
+    public static FogLockClient getFogLockClient() {
+        return fogLockClient;
+    }
+
     @Override
     public void onInitializeClient() {
+        fogLockClient = this;
+        load();
+    }
+
+    public void load() {
         Path path = FabricLoader.getInstance().getConfigDir();
         File file = new File(path.toString(), "FogLock.json");
         try {
@@ -53,7 +64,7 @@ public class FogLockClient implements ClientModInitializer {
                 case "advanced" -> stringValue = new AdvancedMathModule(applyPlaceholders);
                 default -> stringValue = new Value();
             }
-            new FogConfigurationLoader(json, stringValue, configuration, default1);
+            new FogConfigurationLoader(json, stringValue, configuration, default1, applyPlaceholders);
             List<String> potions = new ArrayList<>();
             for (JsonElement jsonElement : json.getAsJsonArray("potions")) {
                 potions.add(jsonElement.getAsString());

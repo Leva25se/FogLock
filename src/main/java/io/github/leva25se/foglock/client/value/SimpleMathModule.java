@@ -1,7 +1,6 @@
 package io.github.leva25se.foglock.client.value;
 
 import io.github.leva25se.foglock.client.fog.FloatType;
-import net.minecraft.client.Camera;
 
 import java.util.HashMap;
 
@@ -16,8 +15,8 @@ public class SimpleMathModule implements StringValue {
     }
 
     @Override
-    public float getValue(String str, Camera camera, float vieDistance, boolean thickFog, float current) {
-        str = applyPlaceholders.applyPlaceholders(str, camera, vieDistance, thickFog, current);
+    public float getValue(String str) {
+        str = applyPlaceholders.applyPlaceholders(str);
         if (cache.containsKey(str)) {
             return cache.get(str);
         }
@@ -58,6 +57,11 @@ public class SimpleMathModule implements StringValue {
         }
         cache.put(str, result);
         return result;
+    }
+
+    @Override
+    public boolean placeholders() {
+        return true;
     }
 
     public float getNext(int i, char[] chars) {

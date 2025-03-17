@@ -3,6 +3,7 @@ package io.github.leva25se.foglock.client.fog;
 import io.github.leva25se.foglock.client.configuration.FogConfiguration;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -37,14 +38,14 @@ public class CustomFog {
     }
 
 
-    public FogParameters setFog(Camera camera, FogParameters fog, float viewDistance, boolean thickenFog) {
+    public FogParameters setFog(Camera camera, FogParameters fog, float viewDistance, boolean thickenFog, ClientLevel clientLevel) {
         if (camera.getEntity() instanceof LivingEntity livingEntity) {
-            return applyCustom(livingEntity, camera, fog, checkEffect(livingEntity), viewDistance, thickenFog);
+            return applyCustom(livingEntity, camera, fog, checkEffect(livingEntity), viewDistance, thickenFog, clientLevel);
         }
         return null;
     }
 
-    private FogParameters applyCustom(LivingEntity entity, Camera camera, FogParameters fog, boolean potion,  float viewDistance, boolean thickenFog) {
+    private FogParameters applyCustom(LivingEntity entity, Camera camera, FogParameters fog, boolean potion,  float viewDistance, boolean thickenFog, ClientLevel clientLevel) {
         net.minecraft.world.level.material.FogType cST = camera.getFluidInCamera();
         FogType fogType = valueHelper.getType(camera, cST);
 
@@ -116,12 +117,12 @@ public class CustomFog {
             return null;
         }
 
-        float start = valueHelper.getValue(FloatType.START, fogSetting, camera, viewDistance, thickenFog, fog.start(), potion);
-        float end = valueHelper.getValue(FloatType.END, fogSetting, camera, viewDistance, thickenFog, fog.end(), potion);
-        float red = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickenFog, fog.red(), potion);
-        float green = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickenFog, fog.green(), potion);
-        float blue = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickenFog, fog.blue(), potion);
-        float alpha = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickenFog, fog.alpha(), potion);
+        float start = valueHelper.getValue(FloatType.START, fogSetting, camera, viewDistance, thickenFog, fog.start(), potion, clientLevel);
+        float end = valueHelper.getValue(FloatType.END, fogSetting, camera, viewDistance, thickenFog, fog.end(), potion, clientLevel);
+        float red = valueHelper.getValue(FloatType.R, fogSetting, camera, viewDistance, thickenFog, fog.red(), potion, clientLevel);
+        float green = valueHelper.getValue(FloatType.G, fogSetting, camera, viewDistance, thickenFog, fog.green(), potion, clientLevel);
+        float blue = valueHelper.getValue(FloatType.B, fogSetting, camera, viewDistance, thickenFog, fog.blue(), potion, clientLevel);
+        float alpha = valueHelper.getValue(FloatType.ALPHA, fogSetting, camera, viewDistance, thickenFog, fog.alpha(), potion, clientLevel);
         return new FogParameters(start, end, fog.shape(), red, green, blue, alpha);
     }
 

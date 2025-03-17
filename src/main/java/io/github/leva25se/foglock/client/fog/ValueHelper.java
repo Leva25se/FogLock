@@ -2,6 +2,7 @@ package io.github.leva25se.foglock.client.fog;
 
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,12 +23,12 @@ public class ValueHelper {
         this.potionApplyTime = potionApplyTime;
     }
 
-    public float getValue(FloatType floatType, HashMap<FloatType, FogSetting> map, Camera camera, float vieDistance, boolean thickFog, float requireNow, boolean potion) {
+    public float getValue(FloatType floatType, HashMap<FloatType, FogSetting> map, Camera camera, float vieDistance, boolean thickFog, float requireNow, boolean potion, ClientLevel clientLevel) {
         FogSetting setting = null;
         if (!potion) {
             if (map.containsKey(floatType)) {
                 setting = map.get(floatType);
-                float result = setting.get(camera, vieDistance, thickFog, requireNow);
+                float result = setting.get(camera, vieDistance, thickFog, requireNow, clientLevel);
                 if (result != -1) {
                     requireNow = result;
                 }

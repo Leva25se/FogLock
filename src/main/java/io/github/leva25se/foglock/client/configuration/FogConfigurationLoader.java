@@ -7,13 +7,15 @@ import io.github.leva25se.foglock.client.fog.FogType;
 import io.github.leva25se.foglock.client.setting.FloatFog;
 import io.github.leva25se.foglock.client.setting.FogSetting;
 import io.github.leva25se.foglock.client.setting.StringFog;
+import io.github.leva25se.foglock.client.value.ApplyPlaceholders;
 import io.github.leva25se.foglock.client.value.StringValue;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 
 public class FogConfigurationLoader {
-    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<ResourceLocation, FogConfiguration> configuration, HashMap<FogType, HashMap<FloatType, FogSetting>> default1) {
+
+    public FogConfigurationLoader(JsonObject jsonObject, StringValue stringValue, HashMap<ResourceLocation, FogConfiguration> configuration, HashMap<FogType, HashMap<FloatType, FogSetting>> default1, ApplyPlaceholders applyPlaceholders) {
         if (jsonObject.has("identifiers")) {
             JsonArray array = jsonObject.get("identifiers").getAsJsonArray();
             for (int i = 0; i < array.size(); i++) {
@@ -35,7 +37,7 @@ public class FogConfigurationLoader {
                                 if (jo.getAsJsonPrimitive(str).isNumber()) {
                                     floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat(), time));
                                 } else {
-                                    floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time));
+                                    floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time, applyPlaceholders));
                                 }
                             }
                         }
@@ -62,7 +64,7 @@ public class FogConfigurationLoader {
                         if (jo.getAsJsonPrimitive(str).isNumber()) {
                             floatHashMap.put(floatType, new FloatFog(jo.get(str).getAsFloat(), time));
                         } else {
-                            floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time));
+                            floatHashMap.put(floatType, new StringFog(jo.get(str).getAsString(), stringValue, time, applyPlaceholders));
                         }
                     } else if (jo.has(str1)) {
                         floatHashMap.put(floatType, new FloatFog(-1, jo.get(str1).getAsLong()));

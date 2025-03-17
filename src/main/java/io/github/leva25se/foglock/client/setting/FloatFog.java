@@ -2,6 +2,7 @@ package io.github.leva25se.foglock.client.setting;
 
 
 import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
 
 public class FloatFog implements FogSetting {
 
@@ -14,7 +15,7 @@ public class FloatFog implements FogSetting {
     }
 
     @Override
-    public float get(Camera camera, float vieDistance, boolean thickFog, float current) {
+    public float get(Camera camera, float vieDistance, boolean thickFog, float current, ClientLevel clientLevel) {
         return f;
     }
 
